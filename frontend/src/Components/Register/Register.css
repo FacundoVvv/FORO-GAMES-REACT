@@ -1,0 +1,177 @@
+.register-page {
+    min-height: 100vh;
+    display: flex;
+}
+
+.register-image-container {
+    display: none;
+}
+
+.register-image-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 0;
+}
+
+.register-text-container {
+    width: 100%;
+    padding: 0 6rem;
+    z-index: 10;
+}
+
+.register-title {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: left;
+    letter-spacing: 0.05em;
+    color: white;
+}
+
+.register-subtitle {
+    font-size: 1.875rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.register-form-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 1rem;
+    z-index: 0;
+    background-image: linear-gradient(to bottom right, #EEF2FF, #E0E7FF);
+}
+
+.register-form-content {
+    width: 100%;
+    padding: 1.5rem 0;
+    z-index: 20;
+}
+
+.register-form-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    color: #1F2937;
+    line-height: 1.25;
+}
+
+.register-form-title-highlight {
+    color: #7C3AED;
+}
+
+.register-form {
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.form-group {
+    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+
+.input-container {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+    transition: all 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    ring: 2px solid #7C3AED;
+    border-color: #7C3AED;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.875rem;
+    color: #7C3AED;
+}
+
+.error-message {
+    color: #EF4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.submit-button {
+    width: 100%;
+    background-color: #7C3AED;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #6D28D9;
+}
+
+.submit-button:disabled {
+    opacity: 0.5;
+}
+
+.login-link-container {
+    padding: 1rem;
+    text-align: center;
+}
+
+.login-link {
+    color: #7C3AED;
+    font-weight: bold;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+.animate-slide-in {
+    animation: slideInFromLeft .6s ease-out forwards;
+}
+
+.animate-slide-in-delayed {
+    animation: slideInFromLeft .6s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (min-width: 1024px) {
+    .register-image-container {
+        display: flex;
+        width: 50%;
+        background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+        align-items: center;
+    }
+
+    .register-form-container {
+        width: 50%;
+    }
+}
