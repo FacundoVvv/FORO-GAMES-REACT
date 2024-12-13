@@ -23,5 +23,8 @@ const verifyCodeValidationRules = [
 ];
 router.post('/register', registerValidationRules, validateFields, authController.register);
 router.post('/login', loginValidationRules, validateFields, authController.login);
-router.post('/verify-code', verifyCodeValidationRules, validateFields, authController.verifyCode);
+router.post('/verify-code', verifyCodeValidationRules, validateFields, authController.verifyCode); //verificar email
+router.post('/verifyToken', authController.verifyToken); //verificar token de inicio de sesion
+router.post('/email-resend', authController.emailResend); //email resend
 module.exports = router;
+

@@ -29,9 +29,8 @@ const RegisterPage = () => {
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        
-        //post to back
-        try{
+        try {
+            // Hacer la solicitud POST
             const response = await fetch('http://localhost:3000/auth/register', {
                 method: 'POST',
                 headers: {
@@ -39,25 +38,25 @@ const RegisterPage = () => {
                 },
                 body: JSON.stringify(values),
             });
-
-            const data = await response.json();
-
-            if (!response.ok){
-                console.log('error durante el registro');
-            }else{
-                //redireccionar a pagina de verificacion email
-                navigate('/Confirm-email', { state: { email: values.email } });
+    
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.log('Error durante el registro:', errorData.message);
+                return;
             }
             
-        }catch(e){
-            console.log(e);
-        }
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+            await response.json();
+            navigate('/Confirm-email', { state: { email: values.email } });
+            return;
+    
+        } catch (e) {
+            console.log('Error en la solicitud:', e.error);
+        } finally {
             setSubmitting(false);
-        }, 400);
+        }
     };
-
+    
     return (
         <section className="register-page">
             <div className="register-image-container">

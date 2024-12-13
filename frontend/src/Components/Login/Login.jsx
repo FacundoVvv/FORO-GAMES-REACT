@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Login.css';
-
+import { MyContext } from '../../Contexts/Main_context';
+import  user_front  from '../../Models/Users/user_front';
+import { useNavigate } from 'react-router-dom';
+import { resendEmailVerify } from '../../Utils/resendEmailVerify';
 const LoginPage = () => {
+
+    const { setUser } = useContext(MyContext);
+    const navigate = useNavigate();
+
     const initialValues = {
         username: '',
         password: '',
@@ -17,7 +24,7 @@ const LoginPage = () => {
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        try{
+        try {
             const response = await fetch('http://localhost:3000/auth/login', {
                 method: 'POST',
                 headers: {
@@ -25,23 +32,47 @@ const LoginPage = () => {
                 },
                 body: JSON.stringify(values),
             });
+    
             const data = await response.json();
-            console.log(response)
-            if(!response.ok){
-                console.log('fetch error');
+    
+            if (!response.ok) {
+
+                // error 403 - Correo no verificado - Resend email confirm
+                if (response.status === 403) {
+                    navigate('/Confirm-email', { state: { email: data.email } });
+                    try {
+                        const emailSendFunc = await resendEmailVerify(data.email);
+                        if (!emailSendFunc.status) {
+                            console.log('Error al reenviar el correo, código:', emailSendFunc.status);
+                            return;
+                        }else{
+                            console.log('exito reenviando correo!.')
+                        }
+                    } catch (error) {
+                        console.error('Error al enviar el correo de confirmación:', error);
+                        throw error;
+                    }
+                    return; 
+                }
+    
+                // other errors
+                console.error('Error desconocido:', response.status);
                 return;
             }
-            const token = data.token;
-            console.log(token);
-
-        }catch(e){
-            console.log('error al procesar solicitud.')
+    
+            // logged
+            setUser(data.data.user);
+            localStorage.setItem('token', data.data.token);
+        } catch (e) {
+            console.error('Error al procesar la solicitud:', e);
+            throw 'Error al procesar solicitud.';
         }
+    
         setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
         }, 400);
     };
+    
 
     return (
         <section className="min-h-screen flex">

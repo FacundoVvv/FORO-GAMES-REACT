@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
   token: {
      type: String 
     },
+  roles: {
+    default_user: true,
+    type: Boolean
+  }
 
 });
 

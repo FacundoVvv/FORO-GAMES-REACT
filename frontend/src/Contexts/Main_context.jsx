@@ -3,10 +3,19 @@ import React, { createContext, useState } from 'react';
 const MyContext = createContext();
 
 const MyProvider = ({ children }) => {
-    const [isLogged, setIsLogged] = useState(false);
+    const [user, setUser] = useState(
+      {
+        isLogged: false,
+        username: '',
+        token: '',
+        roles: {
+          default_user: true,
+        }
+      }
+    );
   
     return (
-      <MyContext.Provider value={{ isLogged, setIsLogged }}>
+      <MyContext.Provider value={{ user, setUser }}>
         {children}
       </MyContext.Provider>
     );
