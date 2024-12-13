@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
-
+import {resendEmailVerify} from '../../../Utils/resendEmailVerify';
 const ConfirmEmail = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -35,6 +35,13 @@ const ConfirmEmail = () => {
 
     const handleResendCode = async () => {
         setMessage('Enviando nuevo código...');
+        try{
+            const resendEmail = await resendEmailVerify(email);
+            setMessage('Nuevo codigo enviado correctamente!');
+        }catch(error){
+            console.log('error:', error);
+            setMessage('Hubo un problema al reenviar el correo.');
+        }
     };
 
     return (

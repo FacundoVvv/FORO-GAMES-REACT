@@ -129,7 +129,7 @@ exports.emailResend = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-
+    //actualizacion del nuevo codigo en el user
     user.emailVerificationToken = codeToVerify;
     await user.save();
 
