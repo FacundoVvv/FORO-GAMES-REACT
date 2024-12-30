@@ -28,14 +28,18 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
   token: {
-     type: String 
-    },
+    type: String,
+    default: null,
+  },
+  times: {
+    lastResendCodeEmailV: { type: Date, default: null }, // to verify last email resend code
+  },
   roles: {
-    default_user: true,
-    type: Boolean
-  }
-
-});
+    type: Map, 
+    of: Boolean,
+    default: { default_user: true }, 
+  },
+}, { timestamps: true }); // created at - updated at
 
 const User = mongoose.model('User', userSchema);
 

@@ -1,4 +1,5 @@
 const User = require('../Models/User');
+
 exports.getUserInfo = async (req, res) => {
     try {
         const { username } = req.params;
@@ -12,5 +13,14 @@ exports.getUserInfo = async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ message: error.message });
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    try{
+
+    }
+    catch(error){
+        res.status(500).json( { message: error.message } );
     }
 }

@@ -37,6 +37,8 @@ const ConfirmEmail = () => {
         setMessage('Enviando nuevo código...');
         try{
             const resendEmail = await resendEmailVerify(email);
+            //debo actualizar la prop del user en db por la fecha actual de envio.
+            
             setMessage('Nuevo codigo enviado correctamente!');
         }catch(error){
             console.log('error:', error);
