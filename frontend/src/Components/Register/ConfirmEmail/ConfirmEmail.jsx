@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
-import {resendEmailVerify} from '../../../Utils/resendEmailVerify';
+import { resendEmailVerify } from '../../../Utils/resendEmailVerify';
+import { updateUserLastResend } from './funcs/updateUserLastResend';
+
 const ConfirmEmail = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const email = location.state?.email;
     const [code, setCode] = useState('');
     const [message, setMessage] = useState('');
+    const [cooldown, setCooldown] = useState(0); // 0: no cooldown, 1: cooldown activo
+
+    // cooldown timer
+    useEffect(() => {
+        if (cooldown > 0) {
+            const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [cooldown]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,13 +45,15 @@ const ConfirmEmail = () => {
     };
 
     const handleResendCode = async () => {
+        if (cooldown > 0) return;
+
         setMessage('Enviando nuevo código...');
-        try{
+        try {
             const resendEmail = await resendEmailVerify(email);
-            //debo actualizar la prop del user en db por la fecha actual de envio.
-            
-            setMessage('Nuevo codigo enviado correctamente!');
-        }catch(error){
+            const response = await updateUserLastResend(email);//actualizar la prop del user en db por la fecha actual de envio.
+            setMessage('Nuevo código enviado correctamente!');
+            setCooldown(60); // start time
+        } catch (error) {
             console.log('error:', error);
             setMessage('Hubo un problema al reenviar el correo.');
         }
@@ -94,8 +107,12 @@ const ConfirmEmail = () => {
                         <div className="text-sm text-gray-600 mb-6">
                             <p>¿No has recibido el correo? Revisa tu carpeta de spam o solicita un nuevo correo de verificación.</p>
                         </div>
-                        <button onClick={handleResendCode} className="w-full bg-purple-100 text-purple-600 py-2 px-4 rounded-lg font-bold hover:bg-purple-200 transition duration-300 transform hover:scale-105">
-                            Reenviar correo de verificación
+                        <button
+                            onClick={handleResendCode}
+                            className={`w-full ${cooldown > 0 ? 'bg-purple-200 text-purple-600' : 'bg-purple-100 text-purple-600'} py-2 px-4 rounded-lg font-bold hover:bg-purple-200 transition duration-300 transform hover:scale-105`}
+                            disabled={cooldown > 0}
+                        >
+                            {cooldown > 0 ? `Reenviar en ${cooldown}` : 'Reenviar correo de verificación'}
                         </button>
                     </div>
                 </div>

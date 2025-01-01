@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./Config/db');
 const authRoutes = require('./Routes/authRoutes');
-const postRoutes = require('./Routes/postRoutes');
+// const postRoutes = require('./Routes/postRoutes');
 const userRoutes = require('./Routes/userRoutes');
 const app = express();
 const PORT = 3000;

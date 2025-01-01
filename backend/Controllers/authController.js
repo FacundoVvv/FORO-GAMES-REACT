@@ -114,11 +114,42 @@ exports.verifyToken = async (req, res) => {
     //devolver 200 y user
   } catch (error) {
     //devolver error
-    return res.status(500).json({ message: 'token inválido.' });
+    return res.status(500).json({ message: 'Token inválido.' });
   }
 }
 
 //EMAIL RESEND
+// exports.emailResend = async (req, res) => {
+//   const { email } = req.body;
+//   const codeToVerify = crypto.randomBytes(32).toString("hex");
+
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'Usuario no encontrado' });
+//     }
+//     //last resend email code verify
+//     const dateNow = new Date();
+//     const lastResendTime = user.times.lastResendCodeEmailV;
+//     const timeDif = (dateNow - lastResendTime) / 1000;
+
+//     if(timeDif < 60){
+//       return res.status(400).json({ message: 'Debes esperar al menos 60 segundos antes de volver a enviar el código.' });
+//     }
+//     //actualizacion del nuevo codigo en el user
+//     user.emailVerificationToken = codeToVerify;
+//     await user.save();
+
+//     const response = await sendEmailVerifyCode(email, codeToVerify);
+//     return res.status(200).json({ message: 'Éxito', response });
+//   } catch (error) {
+//     return res.status(500).json({ message: error, status: response.status });
+//   }
+
+
+// }
+
 exports.emailResend = async (req, res) => {
   const { email } = req.body;
   const codeToVerify = crypto.randomBytes(32).toString("hex");
@@ -129,15 +160,27 @@ exports.emailResend = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-    //actualizacion del nuevo codigo en el user
+
+    // Validar cooldown
+    const dateNow = new Date();
+    const lastResendTime = user.times?.lastResendCodeEmailV;
+    if (lastResendTime) {
+      const timeDif = (dateNow - lastResendTime) / 1000;
+      if (timeDif < 60) {
+        return res.status(429).json({ message: 'Debes esperar al menos 60 segundos antes de volver a enviar el código.' });
+      }
+    }
+
+    // Actualización del nuevo código y del tiempo
     user.emailVerificationToken = codeToVerify;
+    user.times.lastResendCodeEmailV = dateNow;
     await user.save();
 
+    // Enviar correo
     const response = await sendEmailVerifyCode(email, codeToVerify);
-    return res.status(200).json({ message: 'exito', response });
+    return res.status(200).json({ message: 'Éxito. Nuevo código enviado.', response });
   } catch (error) {
-    return res.status(500).json({ message: error, status: response.status });
+    console.error('Error al reenviar el correo:', error);
+    return res.status(500).json({ message: 'Error al reenviar el correo. Por favor, inténtalo de nuevo.' });
   }
-
-
-}
+};
