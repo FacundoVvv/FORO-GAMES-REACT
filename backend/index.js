@@ -1,19 +1,25 @@
-require('dotenv').config();
-const express = require('express');
-const connectDB = require('./Config/db');
-const authRoutes = require('./Routes/authRoutes');
-// const postRoutes = require('./Routes/postRoutes');
-const userRoutes = require('./Routes/userRoutes');
+import 'dotenv/config';
+import express from 'express';
+import { connectDB } from './Config/db.js';
+//routes
+import { authRouter } from './Routes/authRoutes.js';
+// const postRouter = require('./Routes/postRoutes');
+import { userRouter } from'./Routes/userRoutes.js';
+//middleware
+import cors from 'cors';
+
 const app = express();
 const PORT = 3000;
-const cors = require('cors');
 
 connectDB();
 
+//middleware
 app.use(cors());  
 app.use(express.json());
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
+
+//routes
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

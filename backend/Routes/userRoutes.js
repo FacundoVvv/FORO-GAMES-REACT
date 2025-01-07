@@ -1,10 +1,14 @@
-const express = require('express');
-const router_user = express.Router();
-const userController = require('../Controllers/userController');
-const Middleware = require('../Middleware/Middleware');
-//get routes
-router_user.get('/:username', Middleware, userController.getUserInfo);
-// router_user.get('/getLastResendTime, userController.getLastResendTime');
-//post routes
-router_user.post('/updateUserLRT', Middleware, userController.updateUserLastResendTime);
-module.exports = router_user;
+import express from 'express';
+import { getUserInfo, updateUserLastResendTime } from '../Controllers/userController.js';
+import Middleware from '../Middleware/Middleware.js';
+
+const userRouter = express.Router();
+
+// GET routes
+userRouter.get('/:username', Middleware, getUserInfo);
+// userRouter.get('/getLastResendTime', getLastResendTime); // (Si esta ruta la necesitas más adelante)
+
+// POST routes
+userRouter.post('/updateUserLRT', Middleware, updateUserLastResendTime);
+
+export { userRouter };

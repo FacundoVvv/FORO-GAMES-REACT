@@ -1,7 +1,7 @@
-require('dotenv').config();
-const nodemailer = require('nodemailer');
+import 'dotenv/config';
+import nodemailer from 'nodemailer';
 
-const sendEmailVerifyCode = async (email, codeToVerify) => {
+export const sendEmailVerifyCode = async (email, codeToVerify) => {
    const currentYear = new Date().getFullYear();
    
    const transporter = nodemailer.createTransport({
@@ -93,5 +93,3 @@ const sendEmailVerifyCode = async (email, codeToVerify) => {
        throw error;
    }
 };
-
-module.exports = sendEmailVerifyCode;

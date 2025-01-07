@@ -1,30 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const { check } = require('express-validator');
-const authController = require('../Controllers/authController');
-const { validateFields } = require('../Middleware/validateFields');
+import express from 'express';
+import { check } from 'express-validator';
+import { validateFields } from '../Middleware/validateFields.js';
+import { register, login, verifyCode, verifyTokenFC, emailResend } from '../Controllers/authController.js';
 
-// reglas de validacion para el registro
+const authRouter = express.Router();
+
+// Reglas de validación para el registro
 const registerValidationRules = [
   check('username').notEmpty().withMessage('El nombre de usuario es requerido.'),
   check('email').isEmail().withMessage('El correo electrónico no es válido.'),
   check('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres.')
 ];
 
-// reglas de validacion para el login
+// Reglas de validación para el login
 const loginValidationRules = [
   check('username').notEmpty().withMessage('El nombre de usuario es requerido.'),
   check('password').notEmpty().withMessage('La contraseña es requerida.')
 ];
 
-//verification code (Confirm Email)
+// Código de validación de verificación (Confirmar Email)
 const verifyCodeValidationRules = [
   check('code').notEmpty().withMessage('El código de verificación es requerido.')
 ];
-router.post('/register', registerValidationRules, validateFields, authController.register);
-router.post('/login', loginValidationRules, validateFields, authController.login);
-router.post('/verify-code', verifyCodeValidationRules, validateFields, authController.verifyCode); //verificar email
-router.post('/verifyToken', authController.verifyToken); //verificar token de inicio de sesion
-router.post('/email-resend', authController.emailResend); //email resend
-module.exports = router;
 
+authRouter.post('/register', registerValidationRules, validateFields, register);
+authRouter.post('/login', loginValidationRules, validateFields, login);
+authRouter.post('/verify-code', verifyCodeValidationRules, validateFields, verifyCode); // Verificar email
+authRouter.post('/verifyToken', verifyTokenFC); // Verificar token de inicio de sesión
+authRouter.post('/email-resend', emailResend); // Reenviar email
+
+export { authRouter };

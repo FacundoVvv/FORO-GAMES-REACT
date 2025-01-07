@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const createToken = (username) => {
+export const createToken = (username) => {
     if (!process.env.SALT) {
         throw new Error("Falta la clave SALT en las variables de entorno.");
     }
@@ -16,5 +16,3 @@ const createToken = (username) => {
     // create and return token
     return jwt.sign(payload, process.env.SALT, options);
 };
-
-module.exports = createToken;

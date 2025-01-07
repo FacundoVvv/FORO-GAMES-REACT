@@ -1,7 +1,7 @@
+import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
-const jwt = require('jsonwebtoken');
-
-const verifyToken = (token) => {
+export const verifyToken = (token) => {
     try{
         const decoded = jwt.verify(token, process.env.SALT);
         return decoded;
@@ -11,4 +11,3 @@ const verifyToken = (token) => {
         throw error;
     }  
 };
-module.exports = verifyToken;
