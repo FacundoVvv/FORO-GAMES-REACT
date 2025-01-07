@@ -1,14 +1,14 @@
   import './App.css';
   import { BrowserRouter, Routes, Route } from 'react-router-dom';
-  import Header from './Components/Header/Header';
-  import LandingMain from './Components/landingMain/LandingMain';
-  import Footer from './Components/Footer/Footer';
-  import RegisterPage from './Components/Register/Register';
-  import LoginPage from './Components/Login/Login';
-  import ConfirmEmail from './Components/Register/ConfirmEmail/ConfirmEmail';
+  import { Header } from './Components/Header/Header';
+  import { LandingMain } from './Components/landingMain/LandingMain';
+  import { Footer } from './Components/Footer/Footer';
+  import { RegisterPage } from './Components/Register/Register';
+  import { LoginPage } from './Components/Login/Login';
+  import { ConfirmEmail } from './Components/Register/ConfirmEmail/ConfirmEmail';
   import { useEffect, useContext } from 'react';
   import { MyContext } from './Contexts/Main_context'; 
-  import getUserInfo from './Utils/getUserInfo';
+  import { getUserInfo } from './Utils/getUserInfo';
 
 export const App = () => {
     const { setUser } = useContext(MyContext); 
