@@ -1,4 +1,5 @@
-import 'dotenv/config';
+process.loadEnvFile();
+
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = (token) => {

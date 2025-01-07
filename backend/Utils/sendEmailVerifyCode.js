@@ -1,4 +1,4 @@
-import 'dotenv/config';
+process.loadEnvFile();
 import nodemailer from 'nodemailer';
 
 export const sendEmailVerifyCode = async (email, codeToVerify) => {

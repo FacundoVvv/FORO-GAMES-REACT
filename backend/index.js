@@ -1,4 +1,5 @@
-import 'dotenv/config';
+process.loadEnvFile();
+
 import express from 'express';
 import { connectDB } from './Config/db.js';
 //routes
