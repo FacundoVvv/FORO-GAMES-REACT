@@ -1,4 +1,4 @@
-const getUserInfo = async (username) => {
+export const getUserInfo = async (username) => {
   const token = localStorage.getItem('token');
     try {
       const userObj = await fetch(`http://localhost:3000/users/${username}`, {
@@ -22,4 +22,3 @@ const getUserInfo = async (username) => {
       return null;
     }
    }
-export default getUserInfo;

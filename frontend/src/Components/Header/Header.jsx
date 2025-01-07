@@ -3,7 +3,7 @@ import './header.css';
 import { MyContext } from '../../Contexts/Main_context';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { isLogged, setIsLogged } = useContext(MyContext);
   const toggleMenu = () => setMenuOpen(!isMenuOpen);
@@ -50,4 +50,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+

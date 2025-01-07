@@ -10,7 +10,7 @@
   import { MyContext } from './Contexts/Main_context'; 
   import getUserInfo from './Utils/getUserInfo';
 
-  function App() {
+export const App = () => {
     const { setUser } = useContext(MyContext); 
 
     useEffect(() => {
@@ -62,4 +62,3 @@
     );
   }
 
-  export default App;

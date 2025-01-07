@@ -1,6 +1,6 @@
 import Main_About_Us from "./main_About_Us/Main_About_Us";
 import InterestInfo from "./interestInfo/InteresInfo";
-const LandingMain = () => {
+export const LandingMain = () => {
     return (
         <>
         <Main_About_Us/>
@@ -9,5 +9,3 @@ const LandingMain = () => {
     )
 
 }
-
-export default LandingMain;

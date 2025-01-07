@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Main_About_Us = () => {
+export const Main_About_Us = () => {
     return (
         <main className="bg-gradient-to-br from-indigo-50 to-purple-100 py-16 px-4 md:px-8 lg:px-16">
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
@@ -42,5 +42,3 @@ const Main_About_Us = () => {
         </main>
     )
 }
-
-export default Main_About_Us;

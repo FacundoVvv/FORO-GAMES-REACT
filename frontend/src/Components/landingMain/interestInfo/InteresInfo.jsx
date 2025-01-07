@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-const InterestInfo = () => {
+export const InterestInfo = () => {
     return (
         <section className="bg-gradient-to-br from-indigo-50 to-purple-100 py-16 px-4 md:px-8 lg:px-16">
             <div className="max-w-7xl mx-auto">
@@ -48,5 +48,3 @@ const InterestInfo = () => {
         </section>
     )
 }
-
-export default InterestInfo;

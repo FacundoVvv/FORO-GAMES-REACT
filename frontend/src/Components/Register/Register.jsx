@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
-const RegisterPage = () => {
+export const RegisterPage = () => {
 
     const navigate = useNavigate();
 
@@ -137,5 +137,3 @@ const RegisterPage = () => {
         </section>
     );
 };
-
-export default RegisterPage;

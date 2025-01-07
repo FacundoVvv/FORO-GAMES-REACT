@@ -8,7 +8,7 @@ import { MyContext } from '../../Contexts/Main_context';
 import  user_front  from '../../Models/Users/user_front';
 import { useNavigate } from 'react-router-dom';
 import { resendEmailVerify } from '../../Utils/resendEmailVerify';
-const LoginPage = () => {
+export const LoginPage = () => {
 
     const { setUser } = useContext(MyContext);
     const navigate = useNavigate();
@@ -134,5 +134,3 @@ const LoginPage = () => {
         </section>
     );
 };
-
-export default LoginPage;
