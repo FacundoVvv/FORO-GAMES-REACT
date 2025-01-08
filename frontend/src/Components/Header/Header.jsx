@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import './header.css';
-import { MyContext } from '../../Contexts/Main_context';
+import { MyContext } from '@Contexts/Main_context';
 import { Link } from 'react-router-dom';
 
 export const Header = () => {

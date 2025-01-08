@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
-import { resendEmailVerify } from '../../../Utils/resendEmailVerify';
+import { resendEmailVerify } from '@Utils/resendEmailVerify';
 import { updateUserLastResend } from './funcs/updateUserLastResend';
 
 export const ConfirmEmail = () => {

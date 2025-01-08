@@ -4,10 +4,10 @@ import * as Yup from 'yup';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Login.css';
-import { MyContext } from '../../Contexts/Main_context';
-import  { user_front }  from '../../Models/Users/user_front';
+import { MyContext } from '@Contexts/Main_context';
+import  { user_front }  from '@Models/Users/user_front';
 import { useNavigate } from 'react-router-dom';
-import { resendEmailVerify } from '../../Utils/resendEmailVerify';
+import { resendEmailVerify } from '@Utils/resendEmailVerify';
 export const LoginPage = () => {
 
     const { setUser } = useContext(MyContext);
