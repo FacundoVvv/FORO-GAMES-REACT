@@ -4,7 +4,7 @@ import { FaEnvelope } from 'react-icons/fa';
 import { resendEmailVerify } from '../../../Utils/resendEmailVerify';
 import { updateUserLastResend } from './funcs/updateUserLastResend';
 
-const ConfirmEmail = () => {
+export const ConfirmEmail = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const email = location.state?.email;
@@ -121,4 +121,3 @@ const ConfirmEmail = () => {
     );
 };
 
-export default ConfirmEmail;

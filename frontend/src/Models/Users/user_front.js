@@ -1,4 +1,4 @@
-const user_front = (userFromDB) => ({
+export const user_front = ( userFromDB ) => ({
     
         username: userFromDB.username,
         email: userFromDB.email,
@@ -7,4 +7,3 @@ const user_front = (userFromDB) => ({
         roles: userFromDB.roles,
 });
 
-export default user_front;
