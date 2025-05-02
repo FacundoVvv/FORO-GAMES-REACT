@@ -79,12 +79,12 @@ export const LoginPage = () => {
             <div className="login-img-container hidden lg:flex lg:w-1/2 bg-gray-300 items-center justify-center relative">
                 <div className="absolute inset-0 bg-black opacity-100 login-img"></div>
                 <div className="relative z-10 text-center">
-                    <h1 className="text-6xl font-bold text-white">SFRP Inicio de Sesión</h1>
+                    <h1 className="text-3xl font-bold text-white tracking-wide">SFRP Inicio de Sesión</h1>
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-8 bg-gradient-to-br from-blue-100 to-indigo-100">
                 <div className="w-full max-w-md">
-                    <h2 className="text-4xl font-extrabold text-center mb-6 text-gray-800">Inicio de <span className="text-purple-600">Sesión</span></h2>
+                    <h2 className="text-[26px] font-extrabold text-center mb-6 text-gray-800">Inicio de <span className="text-purple-600">Sesión</span></h2>
                     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                         {({ isSubmitting }) => (
                             <Form className="space-y-6">
@@ -123,7 +123,7 @@ export const LoginPage = () => {
                                         {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
                                     </button>
                                 </div>
-                                <div className="register-link-container text-center">
+                                <div className="register-link-container text-center text-[14px]">
                                     <p>¿No tienes una cuenta? <Link to="/register" className="register-link pointer font-bold text-[#7C3AED]">Registrarse</Link></p>
                                 </div>
                             </Form>

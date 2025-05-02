@@ -1,4 +1,4 @@
-FROM node:23.5.0-alpine3.19
+FROM node:20-alpine
 
 WORKDIR /home/forum/frontend
 
