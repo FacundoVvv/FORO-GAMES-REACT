@@ -26,7 +26,6 @@ export const register = async (req, res) => {
     user.password = await bcrypt.hash(password, 10);
     await sendEmailVerifyCode(email, codeToVerify);
     await user.save(); //user with emailverified = false
-
     return res.status(200).json({ message: "Token enviado, activá tu cuenta!" });
   } catch (error) {
     return res.status(500).json({

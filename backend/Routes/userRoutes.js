@@ -6,7 +6,7 @@ const userRouter = express.Router();
 
 // GET routes
 userRouter.get('/:username', Middleware, getUserInfo);
-// userRouter.get('/getLastResendTime', getLastResendTime); // (Si esta ruta la necesitas más adelante)
+// userRouter.get('/getLastResendTime', getLastResendTime); // 
 
 // POST routes
 userRouter.post('/updateUserLRT', Middleware, updateUserLastResendTime);

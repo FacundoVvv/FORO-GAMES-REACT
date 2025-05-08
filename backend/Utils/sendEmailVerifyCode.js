@@ -5,12 +5,12 @@ export const sendEmailVerifyCode = async (email, codeToVerify) => {
    const currentYear = new Date().getFullYear();
    
    const transporter = nodemailer.createTransport({
-       host: "smtp.sendgrid.net",
+       host: "in-v3.mailjet.com",
        port: 587,
        secure: false,
        auth: {
-           user: "apikey",
-           pass: process.env.SENDG_APKEY
+           user: process.env.SENDM_USER,
+           pass: process.env.SENDM_PASS
        }
    });
 
@@ -18,7 +18,7 @@ export const sendEmailVerifyCode = async (email, codeToVerify) => {
        await transporter.sendMail({
            from: {
                name: process.env.SITE_NAME,
-               address: process.env.SENDG_EMAIL
+               address: process.env.SENDER_MAIL_ADDRESS
            },
            to: email,
            subject: `Verificación de cuenta - ${process.env.SITE_NAME}`,
@@ -37,7 +37,7 @@ export const sendEmailVerifyCode = async (email, codeToVerify) => {
                
                ---
                Este es un mensaje automático, por favor no respondas a este email.
-               Para soporte: ${process.env.SUPPORT_EMAIL || process.env.SENDG_EMAIL}
+               Para soporte: ${process.env.SUPPORT_EMAIL || process.env.SENDM_USER}
            `,
            html: `
                <div style="background-color: #f6f6f6; padding: 20px; font-family: Arial, sans-serif;">
