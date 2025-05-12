@@ -61,8 +61,13 @@ export const LoginPage = () => {
             }
     
             // logged
-            setUser(data.data.user);
+            setUser(prev => ({
+                ...prev,
+                ...data.data.user,
+                isLogged: true,
+              }));
             localStorage.setItem('token', data.data.token);
+
         } catch (e) {
             console.error('Error al procesar la solicitud:', e);
             throw 'Error al procesar solicitud.';

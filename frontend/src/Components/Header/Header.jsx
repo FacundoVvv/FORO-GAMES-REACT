@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const { isLogged, setIsLogged } = useContext(MyContext);
+  const { user, setUser } = useContext(MyContext);
   const toggleMenu = () => setMenuOpen(!isMenuOpen);
 
   return (
@@ -16,10 +16,11 @@ export const Header = () => {
       <nav className="tracking-wide font-semibold hidden md:flex flex-grow justify-start space-x-8 ml-40 text-[14px]">
         <a href="#" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Ayuda</a>
         <a href="#" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Reportes</a>
+        { user.isLogged && <Link to="/forum">Foro</Link> }
       </nav>
       <div className="flex items-center space-x-4">
-        {isLogged
-          ? <a href="#" className="hidden md:block px-4 py-2 border border-white rounded-lg hover:bg-white hover:text-blue-600 transition duration-300 ease-in-out shadow-md">Mi cuenta</a>
+        {user.isLogged
+          ? <Link to="/my-account" className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Mi cuenta</Link>
           : <ul className="hidden md:flex space-x-4">
             <li><Link to='/login' className="text-[14px] hover:text-gray-300 font-bold transition duration-300 ease-in-out nav_links">Iniciar sesión</Link></li>
             <li><Link to='/register' className="text-[14px] bg-white text-purple-500 font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out shadow-md">Registrarme</Link></li>
@@ -35,8 +36,8 @@ export const Header = () => {
         <div className="absolute top-16 right-6 bg-purple-700 text-white w-40 rounded-lg shadow-lg md:hidden">
           <a href="#" className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Ayuda</a>
           <a href="#" className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Información</a>
-          {isLogged
-            ? <a href="#" className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Mi cuenta</a>
+          {user.isLogged
+            ? <Link to="/my-account" className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Mi cuenta</Link>
             : (
               <ul className="flex flex-col">
                 <Link to='/login' className="block px-4 py-2 hover:bg-purple-600 transition duration-300 ease-in-out">Iniciar sesión</Link>

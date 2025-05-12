@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserInfo, updateUserLastResendTime } from '../Controllers/userController.js';
+import { getUserInfo, updateUserLastResendTime, changePassword } from '../Controllers/userController.js';
 import Middleware from '../Middleware/Middleware.js';
 
 const userRouter = express.Router();
@@ -11,4 +11,6 @@ userRouter.get('/:username', Middleware, getUserInfo);
 // POST routes
 userRouter.post('/updateUserLRT', Middleware, updateUserLastResendTime);
 
+//PUT routes
+userRouter.put('/change-password', Middleware, changePassword);
 export { userRouter };
