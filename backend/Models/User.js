@@ -33,12 +33,19 @@ const userSchema = new mongoose.Schema({
   },
   times: {
     lastResendCodeEmailV: { type: Date, default: null }, // to verify last email resend code
+    expiresCode: { type: Date, default: null } //verify pin email confirm code expiration
   },
   roles: {
     type: Map, 
     of: Boolean,
     default: { default_user: true }, 
   },
+  // activity:{
+  //   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+  //   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Likes" }],
+  //   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
+  //   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "Friends" }],
+  // }
 }, { timestamps: true }); // created at - updated at
 
 export const User = mongoose.model('User', userSchema);

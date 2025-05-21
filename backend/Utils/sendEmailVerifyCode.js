@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 export const sendEmailVerifyCode = async (email, codeToVerify) => {
    const currentYear = new Date().getFullYear();
-   
+
    const transporter = nodemailer.createTransport({
        host: "in-v3.mailjet.com",
        port: 587,

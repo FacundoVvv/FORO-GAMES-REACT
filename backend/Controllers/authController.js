@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
 import { User } from '../Models/User.js';
 import { sendEmailVerifyCode } from '../Utils/sendEmailVerifyCode.js';
 import { verifyToken } from '../Utils/verifyToken.js';
@@ -8,6 +7,9 @@ import { createToken } from '../Utils/createToken.js';
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
 
+  const codeToVerify = Math.floor(100000 + Math.random() * 900000).toString(); // codigo de 6 digitos
+  const expirationTime = new Date(Date.now() + 10 * 60 * 1000); 
+
   try {
     //verificar user existente
     let user = await User.findOne({ email });
@@ -15,18 +17,25 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "El usuario ya existe." });
     }
 
-    const codeToVerify = crypto.randomBytes(32).toString("hex");
     user = new User({
       username,
       email,
       password,
       isEmailVerified: false,
       emailVerificationToken: codeToVerify,
+      times: {
+        lastResendCodeEmailV: new Date(),
+        expiresCode: expirationTime,
+      },
     });
+
     user.password = await bcrypt.hash(password, 10);
+
     await sendEmailVerifyCode(email, codeToVerify);
     await user.save(); //user with emailverified = false
+
     return res.status(200).json({ message: "Token enviado, activá tu cuenta!" });
+
   } catch (error) {
     return res.status(500).json({
       message: "Error al intentar registrar el usuario.",
@@ -83,8 +92,15 @@ export const verifyCode = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Código incorrecto.' });
     }
 
-    user.isEmailVerified = true;
-    user.emailVerificationToken = undefined;
+    if(Number(user.times?.expiresCode) < Number(new Date()) ){
+      return res.status(410).json( {success:false, message:"Codigo expirado."} );
+    }
+
+    user.set({
+      isEmailVerified: true,
+      emailVerificationToken: null,
+      expiresCode: null
+    })
     await user.save();
 
     res.json({ success: true, message: 'Email verificado correctamente.' });
@@ -107,7 +123,8 @@ export const verifyTokenFC = async (req, res) => {
 
 export const emailResend = async (req, res) => {
   const { email } = req.body;
-  const codeToVerify = crypto.randomBytes(32).toString("hex");
+  const codeToVerify = Math.floor(100000 + Math.random() * 900000).toString(); // pin 6 digitos
+  const expiresIn = new Date(Date.now() + 10 * 60 * 1000);
 
   try {
     const user = await User.findOne({ email });
@@ -124,10 +141,14 @@ export const emailResend = async (req, res) => {
         return res.status(429).json({ message: 'Debes esperar al menos 60 segundos antes de volver a enviar el código.' });
       }
     }
-
-    user.emailVerificationToken = codeToVerify;
-    user.times.lastResendCodeEmailV = dateNow;
-    await user.save();
+    user.set({
+      emailVerificationToken: codeToVerify,
+      times: {
+        lastResendCodeEmailV: dateNow,
+        expiresCode: expiresIn
+      }
+    });
+    user.save();
 
     const response = await sendEmailVerifyCode(email, codeToVerify);
     return res.status(200).json({ message: 'Éxito. Nuevo código enviado.', response });
