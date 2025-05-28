@@ -1,12 +1,8 @@
 export const getUserInfo = async (username) => {
-  const token = localStorage.getItem('token');
     try {
       const userObj = await fetch(`http://localhost:3000/users/${username}`, {
           method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-              'x-auth-token': token
-          }
+          credentials: "include"
     });
       
       if (!userObj.ok) {
@@ -14,7 +10,6 @@ export const getUserInfo = async (username) => {
       }
       
       const userData = await userObj.json();
-      
       return userData.user;
 
     } catch (error) {

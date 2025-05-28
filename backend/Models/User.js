@@ -27,10 +27,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  token: {
-    type: String,
-    default: null,
-  },
   times: {
     lastResendCodeEmailV: { type: Date, default: null }, // to verify last email resend code
     expiresCode: { type: Date, default: null } //verify pin email confirm code expiration

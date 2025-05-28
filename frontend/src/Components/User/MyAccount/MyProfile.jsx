@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MyContext } from '../../../Contexts/Main_context';
+import { MyContext } from '@Contexts/Main_context';
 
 
 //modularizacion

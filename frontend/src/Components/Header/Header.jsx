@@ -48,7 +48,7 @@ export const Header = () => {
       <nav className="tracking-wide font-semibold hidden md:flex flex-grow justify-start space-x-8 ml-40 text-[14px]">
         <Link to="/forum/help" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Ayuda </Link>
         <Link to="/forum/reports" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Reportes </Link>
-        {user.isLogged && <Link to="/forum" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Foro</Link>}
+        <Link to="/forum" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Foro</Link>
       </nav>
       <div className="flex items-center space-x-4">
         {user.isLogged ? (

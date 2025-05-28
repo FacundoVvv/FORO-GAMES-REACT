@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MyContext } from '../../../Contexts/Main_context';
+import { MyContext } from '@Contexts/Main_context';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 

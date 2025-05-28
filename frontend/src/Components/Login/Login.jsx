@@ -5,7 +5,6 @@ import { FaUser, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Login.css';
 import { MyContext } from '@Contexts/Main_context';
-import  { user_front }  from '@Models/Users/user_front';
 import { useNavigate } from 'react-router-dom';
 import { resendEmailVerify } from '@Utils/resendEmailVerify';
 export const LoginPage = () => {
@@ -31,6 +30,7 @@ export const LoginPage = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(values),
+                credentials: "include"
             });
     
             const data = await response.json();
@@ -59,14 +59,15 @@ export const LoginPage = () => {
                 console.error('Error desconocido:', response.status);
                 return;
             }
-    
+
             // logged
-            setUser(prev => ({
+            setUser((prev) => ({
                 ...prev,
-                ...data.data.user,
-                isLogged: true,
-              }));
-            localStorage.setItem('token', data.data.token);
+                user: data.user,
+                isLogged: true
+            }))
+            navigate("/forum");
+            window.location.reload();
 
         } catch (e) {
             console.error('Error al procesar la solicitud:', e);
