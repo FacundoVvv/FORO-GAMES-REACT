@@ -2,6 +2,7 @@ import express from 'express';
 import { check } from 'express-validator';
 import { validateFields } from '../Middleware/validateFields.js';
 import { register, login, verifyCode, verifyTokenFC, emailResend } from '../Controllers/authController.js';
+import { clearCookies } from '../Utils/clearCookies.js';
 
 const authRouter = express.Router();
 
@@ -28,5 +29,5 @@ authRouter.post('/login', loginValidationRules, validateFields, login);
 authRouter.post('/verify-code', verifyCodeValidationRules, validateFields, verifyCode); // Verificar email
 authRouter.post('/verifyToken', verifyTokenFC); // Verificar token de inicio de sesión
 authRouter.post('/email-resend', emailResend); // Reenviar email
-
+authRouter.post('/clear-cookies', clearCookies);
 export { authRouter };

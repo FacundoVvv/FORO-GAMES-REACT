@@ -3,8 +3,9 @@ import { MyContext } from "@Contexts/Main_context";
 import { useParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { NotLoggedRedirect } from "@Utils/NotLoggedRedirect";
-// Validaciones con Yup
+import { NotLoggedRedirect } from "@Utils_forum_components/NotLoggedRedirect";
+
+//validations
 const validationSchema = Yup.object({
   title: Yup.string()
     .required("El título es obligatorio.")

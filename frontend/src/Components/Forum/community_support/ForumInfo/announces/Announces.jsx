@@ -1,66 +1,57 @@
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { MyContext } from "@Contexts/Main_context";
-import { NotLoggedRedirect } from "@Utils/NotLoggedRedirect";
+import { NotLoggedRedirect } from "@Utils_forum_components/NotLoggedRedirect";
+import { PostCard } from "@Utils_forum_components/PostCard";
+import { getPosts } from "@Utils/getPosts.js";
+import { ModalCard } from "@Utils_forum_components/ModalCard";
+import { NewError } from "@Utils_forum_components/NewError";
 export const Announces = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const section = "announce";
   const [arrayPosts, setArrPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, socket, isSocketReady } = useContext(MyContext);
-
+  const [error, setError] = useState("");
   const closeModal = () => {
     setSelectedPost(null);
   };
 
   useEffect(() => {
-    const getAnnouncePosts = async () => {
-      try {
-        // const token = localStorage.getItem("token");
-        const response = await fetch(
-          `http://localhost:3000/forum/posts/get-posts/${section}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setArrPosts(data.posts);
-        } else {
-          console.warn("Error al obtener posts:", response.statusText);
+    const callPosts = async () => {
+      setError("");
+      try{
+        const posts = await getPosts(section);
+        if(posts){
+          setArrPosts(posts);
+        }else{
+          setError("Hubo un problema al cargar los posts.");
+          return;
         }
-      } catch (error) {
-        console.error("Error al hacer fetch:", error);
-      } finally {
+      }catch(error){
+        setError("Hubo un problema al cargar los posts.")
+      }finally{
         setLoading(false);
       }
-    };
-
-    getAnnouncePosts();
+    }
+    callPosts();
   }, []);
 
   //se detecta cuando el socket esa listo y añade los nuevos post al array
   useEffect(() => {
     if (socket.current && isSocketReady) {
-      socket.current.emit("joinRoom", section); // Unirme a la room
+      socket.current.emit("joinRoom", section);
       console.log("announces listening");
 
       const handleReceivePost = (post) => {
+        setError("");
         if (post) {
           setArrPosts((prev) => [...prev, post]);
-        } else {
-          console.log("error con post");
         }
       };
 
       socket.current.on("receive_post", handleReceivePost);
 
-      // 💡 Limpieza del listener para evitar duplicados
       return () => {
         socket.current.off("receive_post", handleReceivePost);
       };
@@ -90,70 +81,27 @@ export const Announces = () => {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <div className="col-span-full text-center text-gray-500">
+          <h2 className="col-span-full text-center text-gray-500">
             Cargando posts...
-          </div>
+          </h2>
         ) : Array.isArray(arrayPosts) && arrayPosts.length > 0 ? (
-          arrayPosts.map((post) => (
-            <div
-              key={post._id}
-              className="bg-white shadow-md rounded-2xl p-5 transition hover:shadow-lg"
-            >
-              <h3 className="text-xl font-bold text-gray-800 mb-2">
-                {post.title}
-              </h3>
-              <p className="text-sm text-gray-500 mb-1">
-                {post.author} • {new Date(post.createdAt).toLocaleDateString()}
-              </p>
-              <p className="text-gray-700 text-sm">
-                {/* {post.description.slice(0, 80)}... */}
-                {String(post.description).slice(0, 80)}...
-              </p>
-              <div className="mt-4 text-right">
-                <button
-                  onClick={() => setSelectedPost(post)}
-                  className="text-sm text-purple-600 hover:underline font-medium"
-                >
-                  Leer más
-                </button>
-              </div>
-            </div>
-          ))
+          arrayPosts
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((post) => (
+              <PostCard post={post} key={post._id} setSelectedPost={setSelectedPost} />
+            ))
         ) : (
-          <div className="col-span-full text-center text-gray-500">
+          <h2 className="col-span-full text-center text-gray-500">
             No hay posts disponibles.
-          </div>
+          </h2>
         )}
+        {error && <NewError message={error}/>}
       </div>
 
       {/* Modal */}
       {selectedPost && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-8 shadow-xl relative animate-fadeIn"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              {selectedPost.title}
-            </h3>
-            <p className="text-sm text-gray-500 mb-2">
-              {selectedPost.author} •{" "}
-              {new Date(selectedPost.createdAt).toLocaleDateString()}
-            </p>
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {selectedPost.description}
-            </p>
-            <button
-              onClick={closeModal}
-              className="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-xl"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
+        <ModalCard closeModal={closeModal} selectedPost={selectedPost}/>
       )}
     </div>
   );

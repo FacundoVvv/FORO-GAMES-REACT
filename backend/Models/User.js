@@ -36,12 +36,26 @@ const userSchema = new mongoose.Schema({
     of: Boolean,
     default: { default_user: true }, 
   },
-  // activity:{
-  //   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
-  //   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Likes" }],
-  //   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
-  //   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "Friends" }],
-  // }
+  activity: {
+    reacted_posts: [
+      {
+        post: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Post",
+          required: true
+        },
+        reaction_type: {
+          type: String,
+          enum: ["Me gusta", "Me encanta", "Me divierte", "Me entristece", "Me enoja"],
+          required: true
+        },
+        reacted_at: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
+  }
 }, { timestamps: true }); // created at - updated at
 
 export const User = mongoose.model('User', userSchema);

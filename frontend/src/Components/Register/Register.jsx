@@ -1,14 +1,14 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
-
+import { NewError } from '@Utils_forum_components/NewError';
 export const RegisterPage = () => {
 
     const navigate = useNavigate();
-
+    const [error, setError] = useState("");
     const initialValues = {
         username: '',
         email: '',
@@ -30,6 +30,7 @@ export const RegisterPage = () => {
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
+        setError("");
         try {
             const response = await fetch('http://localhost:3000/auth/register', {
                 method: 'POST',
@@ -40,16 +41,21 @@ export const RegisterPage = () => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.log('Error durante el registro:', errorData.message);
-                return;
-            }
+                if(response.status === 404){
+                    setError("El nombre de usuario o el correo electronico ya estan en uso.")
+                    return;
+                }else{
+                    setError("Hubo un problema al procesar la solicitud. Intentelo más tarde.")
+                    return;
+                }
 
+            }
+            
             await response.json();
             navigate('/Confirm-email', { state: { email: values.email } });
 
         } catch (e) {
-            console.log('Error en la solicitud:', e);
+            setError("Hubo un problema al procesar la solicitud. Intentelo más tarde.")
         } finally {
             setSubmitting(false);
         }
@@ -110,6 +116,7 @@ export const RegisterPage = () => {
                                     </div>
                                     <ErrorMessage name="password" component="div" className="error-message" />
                                 </div>
+                                 {error && <NewError message={error} />}
                                 <div className="form-group">
                                     <button
                                         type="submit"

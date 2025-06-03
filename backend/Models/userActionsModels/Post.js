@@ -18,9 +18,14 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    },
+      },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref:"Like" }],
+    reactions: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        type: { type: String, enum: ['like', 'love', 'funny', 'sad', 'angry'], required: true },
+        reactedAt: { type: Date, default: Date.now }
+    }
+    ],
     section:{type:String},
 }, { timestamps: true } );
 
