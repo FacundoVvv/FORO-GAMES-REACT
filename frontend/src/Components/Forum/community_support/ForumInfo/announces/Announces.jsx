@@ -7,62 +7,72 @@ import { getPosts } from "@Utils/getPosts.js";
 import { ModalCard } from "@Utils_forum_components/ModalCard";
 import { NewError } from "@Utils_forum_components/NewError";
 export const Announces = () => {
-  const [selectedPost, setSelectedPost] = useState(null);
   const section = "announce";
-  const [arrayPosts, setArrPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { user, socket, isSocketReady } = useContext(MyContext);
   const [error, setError] = useState("");
+  const [arrayPosts, setArrPosts] = useState([]);
+  const { user, socket, isSocketReady } = useContext(MyContext);
+
   const closeModal = () => {
     setSelectedPost(null);
   };
-
+  //first load get posts
   useEffect(() => {
     const callPosts = async () => {
       setError("");
-      try{
+      try {
         const posts = await getPosts(section);
-        if(posts){
+        if (posts) {
           setArrPosts(posts);
-        }else{
+        } else {
           setError("Hubo un problema al cargar los posts.");
           return;
         }
-      }catch(error){
-        setError("Hubo un problema al cargar los posts.")
-      }finally{
+      } catch (error) {
+        setError("Hubo un problema al cargar los posts.");
+      } finally {
         setLoading(false);
       }
-    }
+    };
     callPosts();
   }, []);
 
-  //se detecta cuando el socket esa listo y añade los nuevos post al array
+  //wait sockets to update and set new reactions on array
   useEffect(() => {
     if (socket.current && isSocketReady) {
       socket.current.emit("joinRoom", section);
       console.log("announces listening");
 
-      const handleReceivePost = (post) => {
-        setError("");
-        if (post) {
-          setArrPosts((prev) => [...prev, post]);
-        }
+      const handleReaction = ({ post_id, reaction }) => {
+        setArrPosts((prev) =>
+          prev.map((post) => {
+            if (post._id !== post_id) return post;
+      
+            //filter prev reactions user
+            const filtered = post.reactions.filter(r => r.user !== reaction.user);
+      
+            return {
+              ...post,
+              reactions: [...filtered, reaction], // add
+            };
+          })
+        );
       };
 
-      socket.current.on("receive_post", handleReceivePost);
-
+      socket.current.on("receive_reaction", handleReaction);
+  
       return () => {
-        socket.current.off("receive_post", handleReceivePost);
+        socket.current.off("receive_reaction", handleReaction);
+        socket.current.emit("leaveRoom", section);
       };
     }
   }, [isSocketReady]);
 
   //protect route from front
-  if (!user.user || !user.isLogged) {
+  if (!user.isLogged) {
     return <NotLoggedRedirect />;
   }
-
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 relative">
@@ -70,7 +80,7 @@ export const Announces = () => {
         Últimas <span className="text-purple-600">noticias</span>
       </h2>
 
-      <div className="mb-6 text-right">
+      <div className="mb-6 text-right lg:w-full sm:w-[96%]">
         <Link
           to="/forum/create_post/announce"
           className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition"
@@ -79,7 +89,10 @@ export const Announces = () => {
         </Link>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex flex-col items-center justify-center
+                md:grid md:grid-cols-2 md:w-[80%] md:mx-auto 
+                lg:grid-cols-3 lg:w-full 
+                gap-6 w-full">
         {loading ? (
           <h2 className="col-span-full text-center text-gray-500">
             Cargando posts...
@@ -89,19 +102,25 @@ export const Announces = () => {
             .slice()
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((post) => (
-              <PostCard post={post} key={post._id} setSelectedPost={setSelectedPost} />
+              <PostCard
+                post={post}
+                key={post._id}
+                setSelectedPost={setSelectedPost}
+                setArrPosts={setArrPosts}
+                section={section}
+              />
             ))
         ) : (
           <h2 className="col-span-full text-center text-gray-500">
             No hay posts disponibles.
           </h2>
         )}
-        {error && <NewError message={error}/>}
+        {error && <NewError message={error} />}
       </div>
 
       {/* Modal */}
       {selectedPost && (
-        <ModalCard closeModal={closeModal} selectedPost={selectedPost}/>
+        <ModalCard closeModal={closeModal} selectedPost={selectedPost} />
       )}
     </div>
   );

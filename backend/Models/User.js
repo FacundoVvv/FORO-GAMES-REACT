@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         },
         reaction_type: {
           type: String,
-          enum: ["Me gusta", "Me encanta", "Me divierte", "Me entristece", "Me enoja"],
+          enum: ["like", "love", "funny", "sad", "angry"],
           required: true
         },
         reacted_at: {

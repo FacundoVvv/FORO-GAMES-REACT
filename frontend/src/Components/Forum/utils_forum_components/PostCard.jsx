@@ -1,139 +1,68 @@
 import { HiDocumentText } from "react-icons/hi";
 import { Reactions } from "./Reactions/Reactions";
-import { useEffect, useRef, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { MyContext } from "@Contexts/Main_context";
+import { Link } from "react-router-dom";
 import { NewError } from "./NewError";
 
-export const PostCard = ({ post, setSelectedPost }) => {
-  const [showReactions, setShowReactions] = useState(false);
+export const PostCard = ({ post, setSelectedPost, section }) => {
   const [error, setError] = useState("");
-  const iconsDivRef = useRef(null);
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const { user } = useContext(MyContext);
-  const [myReactionType, setMyReactionType] = useState("");
-  //DOM CHECK
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (iconsDivRef.current && !iconsDivRef.current.contains(event.target)) {
-        setShowReactions(false);
-      }
-    };
-
-    if (showReactions) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [showReactions]);
-
-  //REACT POST LOGIC
-  const handleReaction = async (react_id) => {
-    setError("");
-
-    if (!user.user || !user.isLogged) {
-      console.log(user)
-      setError("Debes iniciar sesión para reaccionar.");
-      return;
-    }
-
-    const user_id = user.user._id;
-
-    try {
-      const response = await fetch(`${BACKEND_URL}/forum/posts/react-post/${post._id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ react_id, user_id }),
-      });
-
-      if (!response.ok) {
-
-        if (response.status === 400) {
-          setError(data?.message || "Datos inválidos.");
-        } else if (response.status === 401) {
-          setError("No autorizado. Inicia sesión nuevamente.");
-        } else if (response.status === 500) {
-          setError("Error del servidor. Intenta más tarde.");
-        } else {
-          setError("Ocurrió un error inesperado.");
-        }
-
-        return;
-      }
-      
-      //el servidor ya añadio tu reaccion al post y el post a tus reacciones collection en user schema
-      // console.log("paree q todo salio bien:"+ await response.json())
-      setMyReactionType(react_id);
-    } catch (e) {
-      console.error("Error en la solicitud:", e);
-      setError("No se pudo conectar con el servidor.");
-    }
-  };
-
-  //detect user reactions on every cardPosts
-  useEffect(() => {
-    if (!user?.user?.activity?.reacted_posts || !post?._id) return;
-  
-    const reaction = user.user.activity.reacted_posts.find((r) =>
-      r.post === post._id || r.post?._id === post._id
-    );
-  
-    if (reaction) {
-      setMyReactionType(reaction.reaction_type);
-    }
-  }, [user, post]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col justify-between hover:shadow-2xl transition duration-300 border border-gray-100 h-[250px]">
-      <div className="flex items-start gap-4">
-        <div className="bg-purple-100 text-purple-600 p-2 rounded-lg">
-          <HiDocumentText className="text-2xl" />
-        </div>
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-1">{post.title}</h3>
-          <p className="text-sm text-gray-500">
-            {post.author.username} • {new Date(post.createdAt).toLocaleDateString()}
-          </p>
-        </div>
+    <div
+      className="items-center justify-center
+                grid grid-cols-[25%,50%,25%] grid-rows-5 gap-2
+                bg-white border border-gray-200 p-6 rounded-lg shadow-sm min-h-[450px]
+                max-h-[450px] max-w-[340px]
+                hover:border-purple-100 transition-all duration-200 ease-in-out
+                drop-shadow-sm hover:shadow-md cursor-pointer"
+    >
+      <HiDocumentText className="text-[35px] text-indigo-800 col-start-1 col-end-2 row-start-1 row-end-2 self-center" />
+
+      <Link
+        className="text-left font-semibold text-sm text-indigo-900 col-start-2 col-end-3 row-start-1 row-end-2 self-center"
+      >
+        {user?.user?.username}
+      </Link>
+
+      <span className="text-left text-xs text-gray-500 col-start-3 col-end-4 row-start-1 row-end-2 self-center">
+        {new Date(post?.createdAt).toLocaleDateString("es-ES")}
+      </span>
+
+      <div
+        className="self-start bg-indigo-100 min-h-[35px] rounded-lg w-full col-start-1 col-end-4 row-start-2 row-end-3 
+                flex items-center justify-center p-2"
+      >
+        <h2 className="text-center text-[15px] font-bold tracking-wider text-gray-900 break-words w-full">
+          {post?.title}
+        </h2>
       </div>
 
-      <p className="text-gray-700 text-sm mt-4 line-clamp-3">
-        {String(post.description).slice(0, 120)}...
-      </p>
-
-      <div className="w-full flex justify-between">
-        <div
-          ref={iconsDivRef}
-          onClick={() => setShowReactions((prev) => !prev)}
-          className="w-1/2 relative"
-        >
-          <button className="text-nowrap text-[14px] text-indigo-900 font-bold py-[1px] px-[2px]">
-            Reaccionar
-          </button>
-          <Reactions onReact={handleReaction} showReactions={showReactions} myReactionType={myReactionType} />
-        </div>
-
-        <div className="w-1/2 flex justify-end items-end">
+      <div className="col-start-1 col-end-4 row-start-3 row-end-4 w-full flex-col items-center justify-center h-full">
+        <p className="line-clamp-3 text-[15px] text-gray-700 break-words h-auto">
+          {post?.description}
+        </p>
+        {post?.description.length > 105 && (
           <button
+            className="text-purple-600 text-sm mt-2 h-auto w-full text-left"
             onClick={() => setSelectedPost(post)}
-            className="w-full text-end text-sm text-purple-600 hover:underline font-medium"
           >
             Leer más
           </button>
-        </div>
+        )}
       </div>
 
-      {error && (
-        <div className="mt-3">
-          <NewError message={error} />
-        </div>
-      )}
+      <div className="col-start-1 col-end-4 row-start-4 row-end-5 gap-2 w-[100%] flex items-end justify-start pt-2">
+        <Reactions post={post} section={section} setError={setError} />
+      </div>
+
+      <div className="col-start-3 col-end-4 row-start-5 row-end-6 flex gap-2 text-sm text-gray-600 w-[50%] flex items-center justify-center">
+        <span>💬</span>
+        <span>Comentarios</span>
+      </div>
+
+      {error && <NewError error={error} />}
     </div>
   );
 };

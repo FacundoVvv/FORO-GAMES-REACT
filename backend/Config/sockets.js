@@ -22,14 +22,14 @@ export const socketsConfig = async (server) => {
       console.log(`Nueva conexion en ${roomName}`);
     });
 
-    socket.on("newPost", ({ section, post }) => {
-      // console.log("llegando a newpost con: ", post)
-      if (section && post){
-        console.log(`Nuevo post en seccion ${section}:`, post.title);
-        io.to(section).emit('receive_post', post);
+    socket.on("newReaction", ({ section, post_id, reaction }) => {
+      console.log("new_reaction:");
+      
+      if (section && post_id && reaction){
+        io.to(section).emit("receive_reaction", { post_id, reaction });
       }
     });
-    
+
     socket.on("disconnect", () => {
       console.log("Cliente desconectado:", socket.id);
     });

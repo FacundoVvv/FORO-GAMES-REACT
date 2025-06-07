@@ -65,7 +65,7 @@ export const MyAccount = () => {
   };
 
   //protect route from front
-  if (!user.user || !user.isLogged) {
+  if (!user.isLogged) {
     return <NotLoggedRedirect />;
   }
 

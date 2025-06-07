@@ -54,7 +54,7 @@ export const CreatePost = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", 
+          credentials: "include",
           body: JSON.stringify({
             title: values.title,
             content: values.content,
@@ -80,10 +80,10 @@ export const CreatePost = () => {
     }
   };
 
-    //protect route from front
-    if (!user.user || !user.isLogged) {
-      return <NotLoggedRedirect />;
-    }
+  //protect route from front
+  if (!user.isLogged) {
+    return <NotLoggedRedirect />;
+  }
 
   return (
     socket.current && (
