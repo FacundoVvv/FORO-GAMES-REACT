@@ -48,20 +48,34 @@ export const Announces = () => {
         setArrPosts((prev) =>
           prev.map((post) => {
             if (post._id !== post_id) return post;
-      
-            //filter prev reactions user
-            const filtered = post.reactions.filter(r => r.user !== reaction.user);
-      
+
+            //reaction exist
+            const existing = post.reactions.find(
+              (r) => r.user === reaction.user
+            );
+
+            // same reaction = delete
+            if (existing && existing.type === reaction.type) {
+              return {
+                ...post,
+                reactions: post.reactions.filter(
+                  (r) => r.user !== reaction.user
+                ),
+              };
+            }
+            // reeplace reaction
+            const filtered = post.reactions.filter(
+              (r) => r.user !== reaction.user
+            );
             return {
               ...post,
-              reactions: [...filtered, reaction], // add
+              reactions: [...filtered, reaction],
             };
           })
         );
       };
-
       socket.current.on("receive_reaction", handleReaction);
-  
+
       return () => {
         socket.current.off("receive_reaction", handleReaction);
         socket.current.emit("leaveRoom", section);
@@ -89,10 +103,12 @@ export const Announces = () => {
         </Link>
       </div>
 
-      <div className="flex flex-col items-center justify-center
+      <div
+        className="flex flex-col items-center justify-center
                 md:grid md:grid-cols-2 md:w-[80%] md:mx-auto 
                 lg:grid-cols-3 lg:w-full 
-                gap-6 w-full">
+                gap-6 w-full"
+      >
         {loading ? (
           <h2 className="col-span-full text-center text-gray-500">
             Cargando posts...

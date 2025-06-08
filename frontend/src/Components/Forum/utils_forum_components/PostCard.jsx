@@ -23,7 +23,7 @@ export const PostCard = ({ post, setSelectedPost, section }) => {
       <Link
         className="text-left font-semibold text-sm text-indigo-900 col-start-2 col-end-3 row-start-1 row-end-2 self-center"
       >
-        {user?.user?.username}
+        {post?.author?.username}
       </Link>
 
       <span className="text-left text-xs text-gray-500 col-start-3 col-end-4 row-start-1 row-end-2 self-center">

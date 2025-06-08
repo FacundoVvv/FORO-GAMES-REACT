@@ -71,7 +71,7 @@ export const reactPost = async (req, res) => {
 
         return res
         .status(200)
-        .json({ message: "La reacción ha sido eliminada." });
+        .json({ message: "La reacción ha sido eliminada."});
 
       } catch (e) {
         return res

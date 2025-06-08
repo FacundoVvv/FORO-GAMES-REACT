@@ -58,13 +58,17 @@ export const Reactions = ({ post, section, setError }) => {
         } else {
           setError?.("Ocurrió un error inesperado.");
         }
+
         return;
       }
 
-      setMyReactionType(reaction_id);
+      if (reaction_id === myReactionType) {
+        setMyReactionType(null);
+      } else {
+        setMyReactionType(reaction_id);
+      }
 
       if (socket?.current && isSocketReady) {
-        console.log('emisiooooooooon')
         socket.current.emit("newReaction", {
           section: section,
           post_id: post._id,
@@ -74,7 +78,6 @@ export const Reactions = ({ post, section, setError }) => {
           },
         });
       }
-
     } catch (e) {
       console.error("Error en la solicitud:", e);
       setError?.("No se pudo conectar con el servidor.");

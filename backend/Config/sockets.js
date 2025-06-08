@@ -34,7 +34,6 @@ export const socketsConfig = async (server) => {
       console.log("Cliente desconectado:", socket.id);
     });
   });
-
   
   io.on("error", (error) => {
     console.error("Socket.IO error:", error);
