@@ -84,12 +84,13 @@ export const Announces = () => {
   }, [isSocketReady]);
 
   //protect route from front
-  if (!user.isLogged) {
+  if (!user.isLogged && !user.user) {
     return <NotLoggedRedirect />;
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 relative">
+    isSocketReady &&(
+      <div className="max-w-5xl mx-auto px-4 py-10 relative">
       <h2 className="text-[28px] font-extrabold mb-10 text-gray-800 text-center">
         Últimas <span className="text-purple-600">noticias</span>
       </h2>
@@ -139,5 +140,6 @@ export const Announces = () => {
         <ModalCard closeModal={closeModal} selectedPost={selectedPost} />
       )}
     </div>
+    )
   );
 };

@@ -74,7 +74,7 @@ export const LoginPage = () => {
 
       // logged
       setUser({
-        user: data.user,
+        user: data.data,
         isLogged: true,
       });
       navigate("/forum");

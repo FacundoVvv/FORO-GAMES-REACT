@@ -7,7 +7,7 @@ import { RegisterPage } from "./Components/Register/Register";
 import { LoginPage } from "./Components/Login/Login";
 import { ConfirmEmail } from "./Components/Register/ConfirmEmail/ConfirmEmail";
 import { MyAccount } from "./Components/User/MyAccount/MyAccount";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext} from "react";
 import { MyContext } from "./Contexts/Main_context";
 import { getUserInfo } from "./Utils/getUserInfo";
 import { ForumMain } from "./Components/Forum/ForumMain";
@@ -25,7 +25,6 @@ import { MyProfile } from "./Components/User/MyAccount/MyProfile";
 import { CreatePost } from "./Components/Forum/user_actions/CreatePost";
 export const App = () => {
   const { setUser } = useContext(MyContext);
-
   useEffect(() => {
     const verifyToken = async () => {
       try {
@@ -54,6 +53,7 @@ export const App = () => {
         }
 
         const userObj = await getUserInfo(username);
+        
         setUser((prev) => ({
           ...prev,
           user: userObj,

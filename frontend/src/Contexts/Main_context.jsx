@@ -54,7 +54,6 @@ const MyProvider = ({ children }) => {
       }
     };
   }, [user.isLogged]);
-  
 
   return (
     <MyContext.Provider value={{ user, setUser, socket, isSocketReady }}>

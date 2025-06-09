@@ -81,7 +81,7 @@ export const CreatePost = () => {
   };
 
   //protect route from front
-  if (!user.isLogged) {
+  if (!user.isLogged && !user.user) {
     return <NotLoggedRedirect />;
   }
 
