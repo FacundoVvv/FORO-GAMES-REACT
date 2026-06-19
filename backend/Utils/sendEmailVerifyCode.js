@@ -37,7 +37,7 @@ export const sendEmailVerifyCode = async (email, codeToVerify) => {
                
                ---
                Este es un mensaje automático, por favor no respondas a este email.
-               Para soporte: ${process.env.SUPPORT_EMAIL || process.env.SENDM_USER}
+               Para soporte: ${process.env.SENDM_USER}
            `,
            html: `
                <div style="background-color: #f6f6f6; padding: 20px; font-family: Arial, sans-serif;">

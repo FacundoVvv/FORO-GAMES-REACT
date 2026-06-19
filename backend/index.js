@@ -10,7 +10,7 @@ import { userRouter } from'./Routes/userRoutes.js';
 import cors from 'cors';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 connectDB();
 
