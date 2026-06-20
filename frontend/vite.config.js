@@ -11,6 +11,8 @@ export default defineConfig({
       '@Contexts': path.resolve(__dirname, "./src/Contexts"),
       '@Models': path.resolve(__dirname, "./src/Models"),
       '@Utils': path.resolve(__dirname, "./src/Utils"),
+      '@Utils_forum_components': path.resolve(__dirname, "./src/Components/Forum/utils_forum_components"),
+      '@Hooks_forum': path.resolve(__dirname, "./src/Components/Forum/hooks_forum"),
     },
   },
 });

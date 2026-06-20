@@ -6,8 +6,11 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials:"include",
                 body: JSON.stringify(email),           
             });
+
+            return ({status: true});
         }catch(error){
             return ( { status: false } );
         }
