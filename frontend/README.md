@@ -1,8 +1,13 @@
-# React + Vite
+# FORO GAMES
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma fullstack de foro interactivo donde usuarios pueden registrarse, crear posts y comentar en tiempo real. Diseñada para demostrar arquitectura moderna y buenas prácticas en desarrollo web.
 
-Currently, two official plugins are available:
+## Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Frontend: React 18, Vite, React Router DOM, Tailwind CSS, Formik, Yup, Socket.io Client
+
+Backend: Express.js, Node.js, MongoDB, Mongoose, JWT, bcryptjs, Nodemailer, Express Validator, Socket.io
+
+## Estado
+
+En desarrollo activo. Funcionalidades principales implementadas: autenticación JWT, CRUD de posts y comentarios, comunicación en tiempo real con Socket.io.

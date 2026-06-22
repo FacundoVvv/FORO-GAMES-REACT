@@ -1,152 +1,205 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import './header.css';
 import { MyContext } from '@Contexts/Main_context';
 import { Link } from 'react-router-dom';
 
 export const Header = () => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
-  const [isDesktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
-  const { user, setUser } = useContext(MyContext);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAccountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const { user } = useContext(MyContext);
   const dropdownRef = useRef(null);
   const accountLinkRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
-  const toggleMenu = () => setMenuOpen(!isMenuOpen);
-
-  // handlers for desktop dropdown
-  const handleMouseEnter = () => {
-    setDesktopDropdownOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    setDesktopDropdownOpen(false);
-  };
-
-  // close dropdown when mouse is outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current && 
-        !dropdownRef.current.contains(event.target) && 
-        accountLinkRef.current && 
-        !accountLinkRef.current.contains(event.target)
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        accountLinkRef.current &&
+        !accountLinkRef.current.contains(event.target) &&
+        !menuButtonRef.current.contains(event.target)
       ) {
-        setDesktopDropdownOpen(false);
+        setAccountDropdownOpen(false);
+      }
+      if (isMobileMenuOpen &&
+        !event.target.closest('[data-mobile-menu]') &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
+
+  const navLinks = [
+    { label: 'Ayuda', path: '/forum/help' },
+    { label: 'Reportes', path: '/forum/reports' },
+    { label: 'Foro', path: '/forum' }
+  ];
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-8 h-[75px] flex items-center justify-between px-8 relative shadow-lg">
-      <h1 className="text-2xl font-extrabold relative cool-title">
-        <Link to='/'><span className='text-black'>SF</span>-RP</Link>
-      </h1>
-      <nav className="tracking-wide font-semibold hidden md:flex flex-grow justify-start space-x-8 ml-40 text-[14px]">
-        <Link to="/forum/help" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Ayuda </Link>
-        <Link to="/forum/reports" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Reportes </Link>
-        <Link to="/forum" className="hover:text-gray-300 transition duration-300 ease-in-out nav_links">Foro</Link>
-      </nav>
-      <div className="flex items-center space-x-4">
-        {user.isLogged ? (
-          <ul className='hidden md:flex items-center justify-center'>
-            <li className="relative">
-              <Link 
-                to="/my-account" 
-                className="block px-4 py-2 hover:bg-purple-600 hover:rounded-lg transition duration-300 ease-in-out"
-                onMouseEnter={handleMouseEnter}
-                ref={accountLinkRef}
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          <Link
+            to="/"
+            className="flex-shrink-0"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <h1 className="text-2xl font-bold text-white tracking-tight">
+              <span className="text-slate-900">SF</span>-RP
+            </h1>
+          </Link>
+
+          <nav className="hidden md:flex items-center space-x-1 flex-grow ml-16">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
               >
-                Mi cuenta
+                {link.label}
               </Link>
-              
-              {/* desktop dropdown menu */}
-              {isDesktopDropdownOpen && (
-                <div 
-                  className="absolute top-10 right-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white w-40 rounded-lg shadow-lg hidden md:block"
-                  ref={dropdownRef}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+            ))}
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            {user.isLogged ? (
+              <div className="hidden md:block relative">
+                <Link
+                  to="/my-account"
+                  ref={accountLinkRef}
+                  onMouseEnter={() => setAccountDropdownOpen(true)}
+                  onMouseLeave={() => setAccountDropdownOpen(false)}
+                  className="flex items-center space-x-2 px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
                 >
-                  
-                  <Link 
-                    to="/my-profile" 
-                    className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out rounded-b-lg"
+                  <svg
+                    className="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>Mi cuenta
+                </Link>
+
+                {isAccountDropdownOpen && (
+                  <div
+                    ref={dropdownRef}
+                    onMouseEnter={() => setAccountDropdownOpen(true)}
+                    onMouseLeave={() => setAccountDropdownOpen(false)}
+                    className="absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-sm rounded-lg shadow-xl border border-purple-500/20"
+                  >
+                    <Link
+                      to="/my-profile"
+                      className="block w-full px-4 py-3 text-white font-medium text-sm hover:bg-purple-600/40 rounded-lg transition-colors duration-200"
+                    >
+                      Mi perfil
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 bg-white text-purple-600 font-bold text-sm rounded-lg hover:bg-slate-100 transition-colors duration-200 shadow-md"
+                >
+                  Registrarme
+                </Link>
+              </div>
+            )}
+
+            <button
+              ref={menuButtonRef}
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors duration-200"
+              aria-label="Abrir menú"
+            >
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {isMobileMenuOpen && (
+          <nav
+            data-mobile-menu
+            className="md:hidden pb-4 border-t border-white/10"
+          >
+            <div className="space-y-2 pt-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {user.isLogged ? (
+                <>
+                  <Link
+                    to="/my-account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
+                  >
+                    Mi cuenta
+                  </Link>
+                  <Link
+                    to="/my-profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
                   >
                     Mi perfil
                   </Link>
-                </div>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 text-white font-medium text-sm hover:bg-white/10 rounded-lg transition-colors duration-200"
+                  >
+                    Iniciar sesión
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 bg-white text-purple-600 font-bold text-sm rounded-lg hover:bg-slate-100 transition-colors duration-200 mt-2"
+                  >
+                    Registrarme
+                  </Link>
+                </>
               )}
-            </li>
-            <li>
-              <Link to="/my-profile" className="block px-4 py-2 hover:bg-purple-600 hover:rounded-lg transition duration-300 ease-in-out md:hidden">
-                Mi perfil
-              </Link>
-            </li>
-          </ul>
-        ) : (
-          <ul className="hidden md:flex space-x-4">
-            <li>
-              <Link to='/login' className="text-[14px] hover:text-gray-300 font-bold transition duration-300 ease-in-out nav_links">
-                Iniciar sesión
-              </Link>
-            </li>
-            <li>
-              <Link to='/register' className="text-[14px] bg-white text-purple-500 font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out shadow-md">
-                Registrarme
-              </Link>
-            </li>
-          </ul>
+            </div>
+          </nav>
         )}
-        <button className="md:hidden p-2 focus:outline-none" onClick={toggleMenu}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
       </div>
-      
-      {/* mobile dropdown menu */}
-      {isMenuOpen && (
-        <div className="absolute top-16 right-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white w-40 rounded-lg shadow-lg md:hidden">
-          <Link to="/forum/help" className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out rounded-t-lg border-b border-purple-400">
-            Ayuda
-          </Link>
-          <Link to="/forum/reports" className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out border-b border-purple-400">
-            Reportes
-          </Link>
-          {user.isLogged ? (
-            <>
-              {user.isLogged && (
-                <Link to="/forum" className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out border-b border-purple-400">
-                  Foro
-                </Link>
-              )}
-              <Link to="/my-account" className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out border-b border-purple-400">
-                Mi cuenta
-              </Link>
-              <Link to="/my-profile" className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out rounded-b-lg">
-                Mi perfil
-              </Link>
-            </>
-          ) : (
-            <ul className="flex flex-col">
-              <li>
-                <Link to='/login' className="block px-4 py-2 hover:bg-purple-500 transition duration-300 ease-in-out border-b border-purple-400">
-                  Iniciar sesión
-                </Link>
-              </li>
-              <li>
-                <Link to='/register' className="block px-4 py-2 bg-white text-purple-500 rounded-b-lg font-medium hover:bg-gray-100 transition duration-300 ease-in-out">
-                  Registrarme
-                </Link>
-              </li>
-            </ul>
-          )}
-        </div>
-      )}
     </header>
   );
 };
