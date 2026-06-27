@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    "paths": {
+      "@Components/*": ["./src/Components/*"],
+      "@Contexts/*": ["./src/Contexts/*"],
+      "@Hooks/*": ["./src/Hooks/*"],
+      "@Models/*": ["./src/Models/*"],
+      "@Router/*": ["./src/Router/*"],
+      "@Types/*": ["./src/Types/*"],
+      "@Utils/*": ["./src/Utils/*"],
+      "@Utils_forum_components/*": ["./src/Components/Forum/utils_forum_components/*"],
+    },
+
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "build"]
+}
